@@ -677,6 +677,7 @@ gb_internal String cg_filepath_obj_for_module(cgModule *m, bool use_assembly) {
 			case TargetOs_darwin:
 			case TargetOs_linux:
 			case TargetOs_essence:
+			case TargetOs_android:
 				ext = STR_LIT(".o");
 				break;
 
@@ -825,6 +826,7 @@ gb_internal bool cg_generate_code(Checker *c, LinkerData *linker_data) {
 		case TargetOs_freebsd:
 		case TargetOs_openbsd:
 		case TargetOs_haiku:
+		case TargetOs_android:
 			debug_format = TB_DEBUGFMT_DWARF;
 			break;
 		}

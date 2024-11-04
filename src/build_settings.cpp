@@ -20,12 +20,13 @@ enum TargetOsKind : u16 {
 	TargetOs_openbsd,
 	TargetOs_netbsd,
 	TargetOs_haiku,
-	
+
 	TargetOs_wasi,
 	TargetOs_js,
 	TargetOs_orca,
 
 	TargetOs_freestanding,
+	TargetOs_android,
 
 	TargetOs_COUNT,
 };
@@ -89,12 +90,13 @@ gb_global String target_os_names[TargetOs_COUNT] = {
 	str_lit("openbsd"),
 	str_lit("netbsd"),
 	str_lit("haiku"),
-	
+
 	str_lit("wasi"),
 	str_lit("js"),
 	str_lit("orca"),
 
 	str_lit("freestanding"),
+	str_lit("android"),
 };
 
 gb_global String target_arch_names[TargetArch_COUNT] = {
@@ -646,6 +648,41 @@ gb_global TargetMetrics target_essence_amd64 = {
 	str_lit("x86_64-pc-none-elf"),
 };
 
+/*
+| Architecture   | Type        | Bitness | Key Uses                                           |
+|----------------|-------------|---------|---------------------------------------------------|
+| i686           | x86         | 32-bit  | Older PCs, embedded systems                        |
+| x86_64 (AMD64) | x86         | 64-bit  | Modern desktops, laptops, servers                  |
+| ARM            | RISC        | 32-bit  | Mobile devices, embedded systems                   |
+| AArch64        | ARM         | 64-bit  | Modern ARM-based processors, servers, high-performance computing |
+*/
+// i686 x86_64 arm aarch64
+// ptr_size, int_size, max_align, max_simd_align
+
+gb_global TargetMetrics target_android_i686 = {
+	TargetOs_android,
+	TargetArch_i686,
+	4, 4, 8, 16,
+	str_lit("i686-linux-android"),
+};
+gb_global TargetMetrics target_android_amd64 = {
+	TargetOs_android,
+	TargetArch_amd64,
+	8, 4, 16, 32,
+	str_lit("x86_64-linux-android"),
+};
+gb_global TargetMetrics target_android_arm64 = {
+	TargetOs_android,
+	TargetArch_arm64,
+	8, 4, 16, 16,
+	str_lit("aarch64-linux-android"),
+};
+gb_global TargetMetrics target_android_arm32 = {
+	TargetOs_android,
+	TargetArch_arm32,
+	4, 4, 8, 16,
+	str_lit("arm-linux-androideabi"),
+};
 
 gb_global TargetMetrics target_freestanding_wasm32 = {
 	TargetOs_freestanding,

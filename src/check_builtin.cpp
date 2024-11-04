@@ -5333,14 +5333,15 @@ gb_internal bool check_builtin_procedure(CheckerContext *c, Operand *operand, As
 					gb_string_free(t);
 				}
 			}
-			
+
 			isize max_arg_count = 32;
-			
+
 			switch (build_context.metrics.os) {
 			case TargetOs_darwin:
 			case TargetOs_linux:
 			case TargetOs_essence:
 			case TargetOs_haiku:
+			case TargetOs_android:
 				switch (build_context.metrics.arch) {
 				case TargetArch_i386:
 				case TargetArch_amd64:
@@ -5353,11 +5354,11 @@ gb_internal bool check_builtin_procedure(CheckerContext *c, Operand *operand, As
 				error(call, "'%.*s' is not supported on this platform (%.*s)", LIT(builtin_name), LIT(target_os_names[build_context.metrics.os]));
 				break;
 			}
-			
+
 			if (ce->args.count > max_arg_count) {
 				error(ast_end_token(call), "'%.*s' has a maximum of %td arguments on this platform (%.*s), got %td", LIT(builtin_name), max_arg_count, LIT(target_os_names[build_context.metrics.os]), ce->args.count);
 			}
-			
+
 			
 			
 			operand->mode = Addressing_Value;

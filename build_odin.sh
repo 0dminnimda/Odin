@@ -149,6 +149,8 @@ build_odin() {
 		;;
 	esac
 
+	CPPFLAGS="$CPPFLAGS -Daligned_alloc=memalign"
+
 	set -x
 	$CXX src/main.cpp src/libtommath.cpp $DISABLED_WARNINGS $CPPFLAGS $CXXFLAGS $EXTRAFLAGS $LDFLAGS -o odin
 	set +x

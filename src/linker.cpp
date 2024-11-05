@@ -613,8 +613,9 @@ gb_internal i32 linker_stage(LinkerData *gen) {
 				if (build_context.metrics.os != TargetOs_openbsd
 					&& build_context.metrics.os != TargetOs_haiku
 					&& build_context.metrics.arch != TargetArch_riscv64
+					&& build_context.metrics.subtarget != Subtarget_Android
 				) {
-					// OpenBSD and Haiku default to PIE executable. do not pass -no-pie for it.
+					// OpenBSD, Haiku and Android default to PIE executable. do not pass -no-pie for it.
 					link_settings = gb_string_appendc(link_settings, "-no-pie ");
 				}
 			}

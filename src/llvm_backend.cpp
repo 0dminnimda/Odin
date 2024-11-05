@@ -3049,8 +3049,11 @@ gb_internal bool lb_generate_code(lbGenerator *gen) {
 
 	switch (build_context.reloc_mode) {
 	case RelocMode_Default:
-		if (build_context.metrics.os == TargetOs_openbsd || build_context.metrics.os == TargetOs_haiku) {
-			// Always use PIC for OpenBSD and Haiku: they default to PIE
+		if (build_context.metrics.os == TargetOs_openbsd
+		 || build_context.metrics.os == TargetOs_haiku
+		 || build_context.metrics.subtarget == Subtarget_Android
+		) {
+			// Always use PIC for OpenBSD, Haiku and Android: they default to PIE
 			reloc_mode = LLVMRelocPIC;
 		}
 

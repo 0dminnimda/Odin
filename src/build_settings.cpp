@@ -153,6 +153,7 @@ gb_global String const ODIN_VERSION = str_lit(ODIN_VERSION_RAW);
 enum Subtarget : u32 {
 	Subtarget_Default,
 	Subtarget_iOS,
+	Subtarget_Android,
 
 	Subtarget_COUNT,
 };
@@ -582,6 +583,7 @@ gb_global TargetMetrics target_android_i686 = {
 	TargetArch_i686,
 	4, 4, 8, 16, // guesses
 	str_lit("i686-linux-android"),
+	Subtarget_Android,
 };
 */
 gb_global TargetMetrics target_android_amd64 = {
@@ -589,18 +591,21 @@ gb_global TargetMetrics target_android_amd64 = {
 	TargetArch_amd64,
 	8, 8, AMD64_MAX_ALIGNMENT, 32, // guesses
 	str_lit("x86_64-linux-android"),
+	Subtarget_Android,
 };
 gb_global TargetMetrics target_android_arm32 = {
 	TargetOs_linux,
 	TargetArch_arm32,
 	4, 4, 8, 16, // guesses
 	str_lit("arm-linux-androideabi"),
+	Subtarget_Android,
 };
 gb_global TargetMetrics target_android_arm64 = {
 	TargetOs_linux,
 	TargetArch_arm64,
 	8, 8, 16, 16,
 	str_lit("aarch64-linux-android"),
+	Subtarget_Android,
 };
 
 

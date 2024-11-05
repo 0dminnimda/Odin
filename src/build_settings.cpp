@@ -20,7 +20,7 @@ enum TargetOsKind : u16 {
 	TargetOs_openbsd,
 	TargetOs_netbsd,
 	TargetOs_haiku,
-	
+
 	TargetOs_wasi,
 	TargetOs_js,
 	TargetOs_orca,
@@ -89,7 +89,7 @@ gb_global String target_os_names[TargetOs_COUNT] = {
 	str_lit("openbsd"),
 	str_lit("netbsd"),
 	str_lit("haiku"),
-	
+
 	str_lit("wasi"),
 	str_lit("js"),
 	str_lit("orca"),
@@ -575,6 +575,33 @@ gb_global TargetMetrics target_linux_riscv64 = {
 	8, 8, 16, 32,
 	str_lit("riscv64-linux-gnu"),
 };
+/*
+gb_global TargetMetrics target_android_i686 = {
+	TargetOs_linux,
+	TargetArch_i686,
+	4, 4, 8, 16, // guesses
+	str_lit("i686-linux-android"),
+};
+*/
+gb_global TargetMetrics target_android_amd64 = {
+	TargetOs_linux,
+	TargetArch_amd64,
+	8, 8, AMD64_MAX_ALIGNMENT, 32, // guesses
+	str_lit("x86_64-linux-android"),
+};
+gb_global TargetMetrics target_android_arm32 = {
+	TargetOs_linux,
+	TargetArch_arm32,
+	4, 4, 8, 16, // guesses
+	str_lit("arm-linux-androideabi"),
+};
+gb_global TargetMetrics target_android_arm64 = {
+	TargetOs_linux,
+	TargetArch_arm64,
+	8, 8, 16, 16,
+	str_lit("aarch64-linux-android"),
+};
+
 
 gb_global TargetMetrics target_darwin_amd64 = {
 	TargetOs_darwin,
@@ -645,7 +672,6 @@ gb_global TargetMetrics target_essence_amd64 = {
 	8, 8, AMD64_MAX_ALIGNMENT, 32,
 	str_lit("x86_64-pc-none-elf"),
 };
-
 
 gb_global TargetMetrics target_freestanding_wasm32 = {
 	TargetOs_freestanding,
@@ -753,6 +779,10 @@ gb_global NamedTargetMetrics named_targets[] = {
 	{ str_lit("linux_arm64"),         &target_linux_arm64    },
 	{ str_lit("linux_arm32"),         &target_linux_arm32    },
 	{ str_lit("linux_riscv64"),       &target_linux_riscv64  },
+//  { str_lit("android_i686"),        &target_android_i686   },
+	{ str_lit("android_amd64"),       &target_android_amd64  },
+	{ str_lit("android_arm32"),       &target_android_arm32  },
+	{ str_lit("android_arm64"),       &target_android_arm64  },
 
 	{ str_lit("windows_i386"),        &target_windows_i386   },
 	{ str_lit("windows_amd64"),       &target_windows_amd64  },
@@ -1527,6 +1557,12 @@ gb_internal void init_build_context(TargetMetrics *cross_target, Subtarget subta
 			#endif
 		#elif defined(GB_SYSTEM_HAIKU)
 			metrics = &target_haiku_amd64;
+		#elif defined(GB_SYSTEM_LINUX_ANDROID)
+			#if defined(GB_CPU_ARM)
+				metrics = &target_android_arm64;
+			#else
+				metrics = &target_android_amd64;
+			#endif
 		#elif defined(GB_CPU_ARM)
 			metrics = &target_linux_arm64;
 		#elif defined(GB_CPU_RISCV)
@@ -1541,6 +1577,8 @@ gb_internal void init_build_context(TargetMetrics *cross_target, Subtarget subta
 			#error "Build Error: Unsupported architecture"
 		#elif defined(GB_SYSTEM_FREEBSD)
 			#error "Build Error: Unsupported architecture"
+		#elif defined(GB_SYSTEM_LINUX_ANDROID)
+			metrics = &target_android_arm32;
 		#else
 			metrics = &target_linux_arm32;
 		#endif

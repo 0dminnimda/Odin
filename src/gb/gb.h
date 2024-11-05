@@ -75,6 +75,11 @@ extern "C" {
 		#ifndef GB_SYSTEM_LINUX
 		#define GB_SYSTEM_LINUX 1
 		#endif
+		#if defined(__ANDROID__) || defined(__ANDROID_API__)
+			#ifndef GB_SYSTEM_LINUX_ANDROID
+			#define GB_SYSTEM_LINUX_ANDROID 1
+			#endif
+		#endif
 	#elif defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
 		#ifndef GB_SYSTEM_FREEBSD
 		#define GB_SYSTEM_FREEBSD 1
@@ -97,6 +102,7 @@ extern "C" {
 #else
 	#error This operating system is not supported
 #endif
+
 
 #if defined(GB_SYSTEM_UNIX)
 #include <sys/wait.h>

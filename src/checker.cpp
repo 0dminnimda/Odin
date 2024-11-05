@@ -1058,7 +1058,6 @@ gb_internal void init_universal(void) {
 			{"JS",           TargetOs_js},
 			{"Orca",         TargetOs_orca},
 			{"Freestanding", TargetOs_freestanding},
-			{"Android",      TargetOs_android},
 		};
 
 		auto fields = add_global_enum_type(str_lit("Odin_OS_Type"), values, gb_count_of(values));

@@ -5341,7 +5341,6 @@ gb_internal bool check_builtin_procedure(CheckerContext *c, Operand *operand, As
 			case TargetOs_linux:
 			case TargetOs_essence:
 			case TargetOs_haiku:
-			case TargetOs_android:
 				switch (build_context.metrics.arch) {
 				case TargetArch_i386:
 				case TargetArch_amd64:

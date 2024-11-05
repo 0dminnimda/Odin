@@ -2634,7 +2634,6 @@ gb_internal String lb_filepath_obj_for_module(lbModule *m) {
 			case TargetOs_darwin:
 			case TargetOs_linux:
 			case TargetOs_essence:
-			case TargetOs_android:
 				ext = STR_LIT(".o");
 				break;
 
@@ -2979,7 +2978,7 @@ gb_internal bool lb_generate_code(lbGenerator *gen) {
 		break;
 	}
 
-	
+
 	if (build_context.microarch == "native") {
 		LLVMInitializeNativeTarget();
 	}
@@ -2993,7 +2992,6 @@ gb_internal bool lb_generate_code(lbGenerator *gen) {
 	char *llvm_error = nullptr;
 	LLVMGetTargetFromTriple(target_triple, &target, &llvm_error);
 	GB_ASSERT(target != nullptr);
-
 
 
 	TIME_SECTION("LLVM Create Target Machine");
@@ -3514,10 +3512,7 @@ gb_internal bool lb_generate_code(lbGenerator *gen) {
 			array_add(&paths, path);
 			Entity *lib = alloc_entity_library_name(nullptr, make_token_ident("asan_lib"), nullptr, slice_from_array(paths), str_lit("asan_lib"));
 			array_add(&gen->foreign_libraries, lib);
-		} else if (build_context.metrics.os == TargetOs_darwin
-			    || build_context.metrics.os == TargetOs_linux
-			    || build_context.metrics.os == TargetOs_android
-			) {
+		} else if (build_context.metrics.os == TargetOs_darwin || build_context.metrics.os == TargetOs_linux) {
 			if (!build_context.extra_linker_flags.text) {
 				build_context.extra_linker_flags = str_lit("-fsanitize=address");
 			} else {

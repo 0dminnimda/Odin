@@ -161,13 +161,15 @@ foreign lib {
 	*/
 	pthread_atfork :: proc(prepare: proc "c" (), parent: proc "c" (), child: proc "c" ()) -> Errno ---
 
-
+// Bionic explicitly did not implement cancel functions
+when ODIN_PLATFORM_SUBTARGET != .Android {
 	/*
 	Cancel the execution of a thread.
 
 	[[ More; https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cancel.html ]]
 	*/
 	pthread_cancel :: proc(thread: pthread_t) -> Errno ---
+}
 
 	/*
 	Creates a new thread with the given attributes.
@@ -303,6 +305,8 @@ foreign lib {
 	*/
 	pthread_self :: proc() -> pthread_t ---
 
+// Bionic explicitly did not implement cancel functions
+when ODIN_PLATFORM_SUBTARGET != .Android {
 	/*
 	Atomically set the calling thread's cancelability and return the previous value.
 
@@ -324,6 +328,7 @@ foreign lib {
 	[[ More; https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_testcancel.html ]]
 	*/
 	pthread_testcancel :: proc() ---
+}
 
 	/*
 	Sets the scheduling priority for the thread given.

@@ -1012,9 +1012,7 @@ when ODIN_OS == .Darwin {
 	SIG_HOLD :: rawptr(uintptr(2))
 
 	uid_t :: distinct c.uint32_t
-	sigset_t :: struct {
-		__val: [1024/(8 * size_of(c.ulong))]c.ulong,
-	}
+	sigset_t :: c.ulong
 
 	SIGHUP    :: 1
 	SIGQUIT   :: 3
@@ -1043,12 +1041,12 @@ when ODIN_OS == .Darwin {
 	// `_t` has been added.
 
 	sigaction_t :: struct {
+		sa_flags:    SA_Flags, /* [PSX] special flags */
 		using _: struct #raw_union {
 			sa_handler:   proc "c" (Signal),                     /* [PSX] signal-catching function or one of the SIG_IGN or SIG_DFL */
 			sa_sigaction: proc "c" (Signal, ^siginfo_t, rawptr), /* [PSX] signal-catching function */
 		},
 		sa_mask:     sigset_t, /* [PSX] set of signals to be blocked during execution of the signal handling function */
-		sa_flags:    SA_Flags, /* [PSX] special flags */
 		sa_restorer: proc "c" (),
 	}
 

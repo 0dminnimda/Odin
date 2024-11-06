@@ -184,11 +184,14 @@ test_monetary :: proc(t: ^testing.T) {
 		return
 	}
 
-	value := 123456.789
-	buf: [128]byte
-	size := posix.strfmon(raw_data(buf[:]), len(buf), "%n", value)
-	testing.expectf(t, int(size) != -1, "strfmon failure: %v", posix.strerror(posix.errno()))
-	log.debug(string(buf[:size]))
+	// Bionic does not implement strfmon
+	when ODIN_PLATFORM_SUBTARGET != .Android {
+		value := 123456.789
+		buf: [128]byte
+		size := posix.strfmon(raw_data(buf[:]), len(buf), "%n", value)
+		testing.expectf(t, int(size) != -1, "strfmon failure: %v", posix.strerror(posix.errno()))
+		log.debug(string(buf[:size]))
+	}
 }
 
 @(test)

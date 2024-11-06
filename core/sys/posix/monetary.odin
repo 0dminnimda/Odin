@@ -34,10 +34,14 @@ foreign lib {
 
 	[[ More; https://pubs.opengroup.org/onlinepubs/9699919799/functions/strfmon.html ]]
 	*/
+
+// Bionic doesn't implement this function. SEE: https://github.com/android/ndk/issues/1182
+when ODIN_PLATFORM_SUBTARGET != .Android {
 	strfmon :: proc(
 		s:              [^]byte,
 		maxsize:        c.size_t,
 		format:         cstring,
 		#c_vararg args: ..any,
 	) -> c.size_t ---
+}
 }

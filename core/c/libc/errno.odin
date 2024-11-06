@@ -15,10 +15,16 @@ when ODIN_OS == .Windows {
 //	EILSEQ
 //	ERANGE
 when ODIN_OS == .Linux {
+	when ODIN_PLATFORM_SUBTARGET == .Android {
+		@(private) _ERRNO_LOCATION :: "__errno"
+	} else {
+		@(private) _ERRNO_LOCATION :: "__errno_location"
+	}
+
 	@(private="file")
 	@(default_calling_convention="c")
 	foreign libc {
-		@(link_name="__errno_location")
+		@(link_name=_ERRNO_LOCATION)
 		_get_errno :: proc() -> ^int ---
 	}
 

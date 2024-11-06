@@ -6,7 +6,9 @@ import "core:c/libc"
 import "core:sys/posix"
 
 __setup_signal_handler :: proc() {
-	libc.signal(posix.SIGTRAP, stop_test_callback)
+	when ODIN_PLATFORM_SUBTARGET != .Android {
+		libc.signal(posix.SIGTRAP, stop_test_callback)
+	}
 }
 
 _test_thread_cancel :: proc "contextless" () {
@@ -18,5 +20,7 @@ _test_thread_cancel :: proc "contextless" () {
 	//
 	// The runner would stall after returning from `pthread_cancel`.
 
-	posix.pthread_testcancel()
+	when ODIN_PLATFORM_SUBTARGET != .Android {
+		posix.pthread_testcancel()
+	}
 }

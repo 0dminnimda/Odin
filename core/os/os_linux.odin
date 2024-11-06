@@ -475,8 +475,14 @@ pollfd :: struct {
 
 sigset_t :: distinct u64
 
+when ODIN_PLATFORM_SUBTARGET == .Android {
+	@(private) _ERRNO_LOCATION :: "__errno"
+} else {
+	@(private) _ERRNO_LOCATION :: "__errno_location"
+}
+
 foreign libc {
-	@(link_name="__errno_location") __errno_location    :: proc() -> ^c.int ---
+	@(link_name=_ERRNO_LOCATION)    __errno_location    :: proc() -> ^c.int ---
 
 	@(link_name="getpagesize")      _unix_getpagesize   :: proc() -> c.int ---
 	@(link_name="get_nprocs")       _unix_get_nprocs    :: proc() -> c.int ---

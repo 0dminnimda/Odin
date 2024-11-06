@@ -691,6 +691,13 @@ gb_internal i32 linker_stage(LinkerData *gen) {
 				return result;
 			}
 
+#if defined(GB_SYSTEM_LINUX_ANDROID)
+			system_exec_command_line_app("termux-elf-cleaner", "termux-elf-cleaner --quiet \"%.*s\"", LIT(output_filename));
+			if (result) {
+				gb_printf_err("warning: termux-elf-cleaner failed or is not installed\n");
+			}
+#endif
+
 			if (is_osx && build_context.ODIN_DEBUG) {
 				// NOTE: macOS links DWARF symbols dynamically. Dsymutil will map the stubs in the exe
 				// to the symbols in the object file

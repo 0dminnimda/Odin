@@ -1007,13 +1007,16 @@ when ODIN_OS == .Darwin {
 	SI_MESGQ   :: -5 // NOTE: not implemented
 
 } else when ODIN_OS == .Linux {
-
 	// Request that signal be held
 	SIG_HOLD :: rawptr(uintptr(2))
 
 	uid_t :: distinct c.uint32_t
-	sigset_t :: struct {
-		__val: [1024/(8 * size_of(c.ulong))]c.ulong,
+	when ODIN_PLATFORM_SUBTARGET == .Android {
+		sigset_t :: c.ulong
+	} else {
+		sigset_t :: struct {
+			__val: [1024/(8 * size_of(c.ulong))]c.ulong,
+		}
 	}
 
 	SIGHUP    :: 1
@@ -1042,14 +1045,26 @@ when ODIN_OS == .Darwin {
 	// NOTE: this is actually defined as `sigaction`, but due to the function with the same name
 	// `_t` has been added.
 
-	sigaction_t :: struct {
-		using _: struct #raw_union {
-			sa_handler:   proc "c" (Signal),                     /* [PSX] signal-catching function or one of the SIG_IGN or SIG_DFL */
-			sa_sigaction: proc "c" (Signal, ^siginfo_t, rawptr), /* [PSX] signal-catching function */
-		},
-		sa_mask:     sigset_t, /* [PSX] set of signals to be blocked during execution of the signal handling function */
-		sa_flags:    SA_Flags, /* [PSX] special flags */
-		sa_restorer: proc "c" (),
+	when ODIN_PLATFORM_SUBTARGET == .Android {
+		sigaction_t :: struct {
+			sa_flags:    SA_Flags, /* [PSX] special flags */
+			using _: struct #raw_union {
+				sa_handler:   proc "c" (Signal),                     /* [PSX] signal-catching function or one of the SIG_IGN or SIG_DFL */
+				sa_sigaction: proc "c" (Signal, ^siginfo_t, rawptr), /* [PSX] signal-catching function */
+			},
+			sa_mask:     sigset_t, /* [PSX] set of signals to be blocked during execution of the signal handling function */
+			sa_restorer: proc "c" (),
+		}
+	} else {
+		sigaction_t :: struct {
+			using _: struct #raw_union {
+				sa_handler:   proc "c" (Signal),                     /* [PSX] signal-catching function or one of the SIG_IGN or SIG_DFL */
+				sa_sigaction: proc "c" (Signal, ^siginfo_t, rawptr), /* [PSX] signal-catching function */
+			},
+			sa_mask:     sigset_t, /* [PSX] set of signals to be blocked during execution of the signal handling function */
+			sa_flags:    SA_Flags, /* [PSX] special flags */
+			sa_restorer: proc "c" (),
+		}
 	}
 
 	SIG_BLOCK   :: 0

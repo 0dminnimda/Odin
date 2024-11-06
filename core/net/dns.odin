@@ -32,6 +32,11 @@ when ODIN_OS == .Windows {
 		resolv_conf        = "",
 		hosts_file         = "%WINDIR%\\system32\\drivers\\etc\\hosts",
 	}
+} else when ODIN_PLATFORM_SUBTARGET == .Android {
+	DEFAULT_DNS_CONFIGURATION :: DNS_Configuration{
+		resolv_conf        = "/data/data/com.termux/files/usr/etc/resolv.conf",
+		hosts_file         = "/data/data/com.termux/files/usr/etc/hosts",
+	}
 } else when ODIN_OS == .Linux || ODIN_OS == .Darwin || ODIN_OS == .FreeBSD || ODIN_OS == .OpenBSD || ODIN_OS == .NetBSD {
 	DEFAULT_DNS_CONFIGURATION :: DNS_Configuration{
 		resolv_conf        = "/etc/resolv.conf",
